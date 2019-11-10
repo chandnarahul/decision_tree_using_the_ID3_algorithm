@@ -21,11 +21,11 @@ for line in inputFile.readlines():
     labelColumnsExcludingDescisionColumn = len(dataAsArray) - 1
     for labelIndex in range(labelColumnsExcludingDescisionColumn):
         labelColumnValue = dataAsArray[labelIndex]
-        if labelColumnValue in labelsAndTheirCountMap:
-            labelsAndTheirCountMap[labelColumnValue] = labelsAndTheirCountMap.get(labelColumnValue) + 1
-        else:
-            labelsAndTheirCountMap[labelColumnValue] = 1
-    
+        try:
+            labelsAndTheirCountMap[labelIndex].add(labelColumnValue)
+        except KeyError:
+            labelsAndTheirCountMap[labelIndex] = {labelColumnValue}
+      
 
 print ('Total number of lines in the file ['+str(totalNumberOfRowsInFile)+']\n')
 
