@@ -1,7 +1,7 @@
 from math import log2
 inputFile = open("car.csv", "r")
 
-descisionsAndTheirCountMap = {}
+decisionsAndTheirCountMap = {}
 labelsAndTheirCountMap = {}
 totalNumberOfRowsInFile = 0
 
@@ -13,10 +13,10 @@ for line in inputFile.readlines():
     
     descisionColumnValue = dataAsArray[lengthOfColumns-1]
     
-    if descisionColumnValue in descisionsAndTheirCountMap:
-        descisionsAndTheirCountMap[descisionColumnValue] = descisionsAndTheirCountMap.get(descisionColumnValue) + 1
+    if descisionColumnValue in decisionsAndTheirCountMap:
+        decisionsAndTheirCountMap[descisionColumnValue] = decisionsAndTheirCountMap.get(descisionColumnValue) + 1
     else:
-        descisionsAndTheirCountMap[descisionColumnValue] = 1
+        decisionsAndTheirCountMap[descisionColumnValue] = 1
     
     labelColumnsExcludingDescisionColumn = len(dataAsArray) - 1
     for labelIndex in range(labelColumnsExcludingDescisionColumn):
@@ -29,17 +29,17 @@ for line in inputFile.readlines():
 
 print ('Total number of lines in the file ['+str(totalNumberOfRowsInFile)+']\n')
 
-print ('Descisions and their count: \n'+str(descisionsAndTheirCountMap)+'\n')
+print ('Descisions and their count: \n' + str(decisionsAndTheirCountMap) + '\n')
 
 print ('Labels and their count: \n'+str(labelsAndTheirCountMap)+'\n')
 
 entropy = 0
-for (descision,count) in descisionsAndTheirCountMap.items():
+for (descision,count) in decisionsAndTheirCountMap.items():
     p = (count/totalNumberOfRowsInFile)
     entropy = entropy - p * log2(p)
 
 print('Entropy for descisions is ['+str(entropy)+']\n')
 
-for (descision,count) in descisionsAndTheirCountMap.items():
+for (descision,count) in decisionsAndTheirCountMap.items():
     p = (count/totalNumberOfRowsInFile)
     entropy = entropy - p * log2(p)
