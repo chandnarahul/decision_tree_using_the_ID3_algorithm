@@ -1,45 +1,41 @@
-from math import log2
+from math import log
+from typing import Dict
+
 inputFile = open("car.csv", "r")
 
-decisionsAndTheirCountMap = {}
-labelsAndTheirCountMap = {}
+columnsAndTheirCountMap: Dict[int, Dict[str, int]] = {}
 totalNumberOfRowsInFile = 0
-
+lengthOfColumns = 0
 for line in inputFile.readlines():
     totalNumberOfRowsInFile = totalNumberOfRowsInFile + 1
     dataAsArray = line.strip().split(',')
-    
+
     lengthOfColumns = len(dataAsArray)
-    
-    descisionColumnValue = dataAsArray[lengthOfColumns-1]
-    
-    if descisionColumnValue in decisionsAndTheirCountMap:
-        decisionsAndTheirCountMap[descisionColumnValue] = decisionsAndTheirCountMap.get(descisionColumnValue) + 1
-    else:
-        decisionsAndTheirCountMap[descisionColumnValue] = 1
-    
-    labelColumnsExcludingDescisionColumn = len(dataAsArray) - 1
-    for labelIndex in range(labelColumnsExcludingDescisionColumn):
+
+    for labelIndex in range(lengthOfColumns):
         labelColumnValue = dataAsArray[labelIndex]
-        try:
-            labelsAndTheirCountMap[labelIndex].add(labelColumnValue)
-        except KeyError:
-            labelsAndTheirCountMap[labelIndex] = {labelColumnValue}
-      
+        if labelIndex in columnsAndTheirCountMap:
+            innerDictionary: Dict[str, int] = columnsAndTheirCountMap[labelIndex]
+            try:
+                innerDictionary[labelColumnValue] = innerDictionary[labelColumnValue] + 1
+            except KeyError:
+                innerDictionary[labelColumnValue] = 1
 
-print ('Total number of lines in the file ['+str(totalNumberOfRowsInFile)+']\n')
+            columnsAndTheirCountMap[labelIndex] = innerDictionary
+        else:
+            innerDictionary: Dict[str, int] = {labelColumnValue: 1}
+            columnsAndTheirCountMap[labelIndex] = innerDictionary
 
-print ('Descisions and their count: \n' + str(decisionsAndTheirCountMap) + '\n')
+print('All columns and their label types: \n' + str(columnsAndTheirCountMap) + '\n')
 
-print ('Labels and their count: \n'+str(labelsAndTheirCountMap)+'\n')
+decisionsAndTheirCountMap = columnsAndTheirCountMap[lengthOfColumns - 1]
+print('Total number of lines in the file [' + str(totalNumberOfRowsInFile) + ']\n')
+
+print('Decisions and their count: \n' + str(decisionsAndTheirCountMap) + '\n')
 
 entropy = 0
-for (descision,count) in decisionsAndTheirCountMap.items():
-    p = (count/totalNumberOfRowsInFile)
-    entropy = entropy - p * log2(p)
+for (decision, count) in decisionsAndTheirCountMap.items():
+    p = (count / totalNumberOfRowsInFile)
+    entropy = entropy - (p * log(p, len(decisionsAndTheirCountMap)))
 
-print('Entropy for descisions is ['+str(entropy)+']\n')
-
-for (descision,count) in decisionsAndTheirCountMap.items():
-    p = (count/totalNumberOfRowsInFile)
-    entropy = entropy - p * log2(p)
+print('Entropy for decisions is [' + str(entropy) + ']\n')
