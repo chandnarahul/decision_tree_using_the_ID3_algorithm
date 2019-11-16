@@ -1,6 +1,7 @@
+from math import log
+
 import numpy as np
 import pandas as pd
-from math import log
 
 eps = np.finfo(float).eps
 
@@ -20,9 +21,9 @@ totalRowsInDataSet: int = dataFrame.shape[0]
 print('Total number of lines in the file [' + str(totalRowsInDataSet) + ']\n')
 
 
-def entropyFor(definitionColumn: int, numberOfRecords: int):
+def entropyFor(definitionColumn: int):
     decisionsAndCount: dict = dataFrame[definitionColumn].value_counts()
-    localEntropy: float = calculateEntropy(decisionsAndCount, numberOfRecords)
+    localEntropy: float = calculateEntropy(decisionsAndCount, totalRowsInDataSet)
     print('localEntropy ' + str(localEntropy))
     return localEntropy
 
@@ -49,7 +50,7 @@ def calculateInformationGain(computeForAttributeIndex: int, decisionColumnIndex:
         entropyForEachFeature: float = calculateEntropy(allValuesThatMatchDecisionElement, allValues)
         informationForEachAttribute += (allValues / totalRowsInDataSet) * entropyForEachFeature
 
-    return entropyFor(decisionColumnIndex,) - informationForEachAttribute
+    return entropyFor(decisionColumnIndex) - informationForEachAttribute
 
 
 def calculateColumnWithHighestEntropy(end: int, decisionColumnIndex: int):
@@ -67,4 +68,5 @@ def calculateColumnWithHighestEntropy(end: int, decisionColumnIndex: int):
     return highestIndex
 
 
-entropyIndex = calculateColumnWithHighestEntropy(len(dataFrame.columns), len(dataFrame.columns) - 1)
+highestEntropyIndex = calculateColumnWithHighestEntropy(len(dataFrame.columns), len(dataFrame.columns) - 1)
+print('\nroot index [' + str(highestEntropyIndex) + ']')
